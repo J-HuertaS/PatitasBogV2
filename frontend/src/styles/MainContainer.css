@@ -1,0 +1,35 @@
+/*
+El MainContainer es el componente principal del layout, y se le da prioridad visual en la interfaz.
+Recibe como prop un único hijo, correspondiente a la vista que se debe renderizar en cada caso.
+
+Se definen los siguientes estilos para las distintas partes que componen el MainContainer:
+  - main-container: Contenedor principal dentro del MainContainer, encargado de alojar al hijo recibido 
+    como prop.
+  - generic-container: Contenedor genérico utilizado para agrupar los elementos que conforman cada vista.
+    Se aplica al div global en todas las vistas definidas en la carpeta 'views', ya que el MainContainer 
+    solo puede recibir un hijo directo.
+*/
+
+.main-container {
+    flex: 1; 
+    background-color: var(--white);
+    padding: 0rem; 
+    height: 100%; 
+    box-sizing: border-box; 
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+    align-items: center; 
+    padding-bottom: 1rem;
+}
+
+.generic-container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: auto;
+    align-items: center;
+    padding: 1rem;
+    width: 100%; 
+    box-sizing: border-box;
+}

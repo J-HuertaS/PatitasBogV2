@@ -1,0 +1,30 @@
+/*
+  Estilos del componente de Bienvenida. Este archivo contiene los estilos aplicados al texto de bienvenida que se muestra 
+  en las vistas de registro e inicio de sesión.
+
+  Clases definidas:
+    - texto-bienvenida: Contenedor principal del mensaje. Controla ubicación y tamaño.
+      - h2: Aplica estilos al título principal del mensaje de bienvenida.
+      - p: Aplica estilos al contenido descriptivo del mensaje.
+*/
+
+
+.texto-bienvenida {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    text-align: center;     
+    padding: 1rem;
+    width: 60%;
+}
+
+.texto-bienvenida h2{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.texto-bienvenida p{
+    margin-top: 0;
+    margin-bottom: 0;
+}

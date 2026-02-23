@@ -1,0 +1,105 @@
+/*
+Este archivo define los estilos del componente Navbar.
+
+Estilos generales:
+  - navbar: define la estética del contenedor principal, como su ubicación, color de fondo y tamaño.
+  - navbar a: aplica a todos los enlaces de navegación dentro de la Navbar.
+
+Elementos internos del Navbar:
+  - logo-section: contenedor que agrupa el logo y el nombre de la aplicación.
+  - logo-container: contenedor exclusivo para el logo; restringe su tamaño.
+  - logo: estilos aplicados directamente a la imagen del logo.
+  - nav-links: sección que contiene los enlaces de registro e inicio de sesión.
+  - link-register: estilos del enlace de registro.
+    - link-register::after: genera una barra vertical decorativa junto al enlace.
+    - link-register:hover: define el estilo al pasar el cursor por encima del enlace.
+  - btn-login: botón personalizado para iniciar sesión.
+    - btn-login:hover: define el estilo del botón al pasar el cursor sobre él.
+*/
+
+/*Estilos generales de la Navbar*/
+.navbar {
+  background-color: var(--orange2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.2rem 1.5rem; 
+  color: var(--blue);
+  height: var(--navbar-height);
+  z-index: 997; 
+}
+
+.navbar a{
+  text-decoration: none;
+}
+
+/*Estilo de la sección de logo*/
+.logo-section {
+  display: flex;
+  align-items: center; 
+  gap: 0.2rem;
+  color: var(--blue);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.logo-container {
+  height: 3rem; 
+  width: 3rem;  
+}
+
+.logo {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+/*Estilo de la sección de links*/
+.nav-links {
+  display: flex;
+  align-items: center; 
+  gap: 0; 
+}
+
+/*Estilos del link de registro*/
+.link-register {
+  color: var(--blue); 
+  text-decoration: none;
+  cursor: pointer;
+  padding-right: 1.25rem; 
+  font-weight: bold;
+  position: relative; 
+}
+
+.link-register::after {
+  content: ''; 
+  position: absolute;
+  right: 0.6rem; 
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%; 
+  width: 2px; 
+  background-color: var(--blue);  
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.2); 
+}
+
+.link-register:hover {
+  color: var(--orange1);
+}
+
+/*Estilos del botón de inicio de sesión*/
+.btn-login {
+  background-color: var(--orange1); 
+  border-radius: 1rem;
+  color: var(--blue); 
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 0.3rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--blue);
+}
+
+.btn-login:hover {
+  background-color: var(--gray);
+}

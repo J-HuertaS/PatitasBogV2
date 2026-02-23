@@ -1,0 +1,31 @@
+/*
+En cada una de las rutas definidas en App.jsx, el componente principal que se renderiza es Layout.
+
+Este componente se compone de cuatro partes generales:
+  - Navbar: barra de navegación horizontal ubicada en la parte superior de la página.
+  - LeftContainer: contenedor lateral izquierdo que muestra el menú con accesos al perfil del usuario y 
+    notificaciones.
+  - RightContainer: contenedor lateral derecho que muestra los datos de contacto, así como accesos al módulo 
+    educativo y a la creación de reportes.
+  - MainContainer: contenedor central donde se renderizan los formularios de creación o edición de reportes, 
+    la visualización de reportes, el perfil del usuario, u otros contenidos según la ruta.
+
+Estilos definidos para los elementos estructurales del Layout:
+  - view: contenedor global que ocupa toda la altura de la vista. Está configurado como una columna, ya que 
+    contiene primero la Navbar en la parte superior, y debajo el resto de los componentes.
+  - main-content-wrapper: contenedor ubicado debajo de la Navbar. Está configurado como una fila para 
+    acomodar los contenedores laterales (izquierdo y derecho) y el contenedor central (MainContainer).
+*/
+
+.view{
+  display: 'flex'; 
+  flex-direction: 'column'; 
+  height: '100vh'
+}
+
+.main-content-wrapper {
+  display: flex; 
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+  box-sizing: border-box; 
+}

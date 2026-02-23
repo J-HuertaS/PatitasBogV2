@@ -1,0 +1,155 @@
+/*
+  Estilos del componente de Reportes.
+
+  Este archivo define los estilos para el módulo de creación de reportes, 
+  como el formulario de reporte de pérdida de mascota.
+
+  Clases principales:
+    - container-modulo-reportes: Contenedor principal del formulario completo.
+    - columnas-container-reportes: Contenedor que distribuye horizontalmente secciones del formulario (modo columnas).
+    - filas-container-reportes: Contenedores internos dentro de columnas, usados para apilar elementos verticalmente (modo filas).
+    - cabecera-container-reportes: Encabezado del formulario con título y botón de cierre (igual que en el login).
+      - cabecera-container-reportes a: Enlace para cerrar o salir del formulario (estilo de navegación).
+    - formulario-modulo-reportes: Contenedor general del formulario (función equivalente a la del login).
+    - textarea-reportes: Estilo aplicado al campo de texto libre para detalles.
+    - label-foto: Etiqueta para el campo de carga de imagen.
+    - input-foto: Campo de carga de archivo de imagen (JPG o PNG).
+      - input-foto::file-selector-button: Botón de selección de archivo.
+      - input-foto::file-selector-button:hover: Efecto visual al pasar el cursor sobre el botón.
+    - preview-foto: Estilo para la vista previa de la imagen cargada.
+    - buttons-div-reportes: Contenedor de los botones de acción ("Crear", "Descartar").
+    - mapa: Estilo aplicado al componente importado `MapaSelector` para elegir ubicación.
+
+  Media queries:
+    - @media (max-width: 780px):
+      - columnas-container-reportes: Pasa a apilar en vertical (modo columna).
+      - buttons-div-reportes: Los botones se alinean en columna para mejor adaptación móvil.
+*/
+
+.container-modulo-reportes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    text-align: center;
+    background-color: var(--orange2);
+    border-radius: 2rem;
+    padding: 2rem 1rem;
+}
+
+.columnas-container-reportes {
+    margin-top: 0.5rem;
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.filas-container-reportes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  margin-right: 1rem;
+}
+
+.cabecera-container-reportes {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    width: 100%; 
+}
+
+.cabecera-container-reportes a{
+    text-decoration: none;
+    color: var(--blue);
+}
+
+.formulario-modulo-reportes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+}
+
+.textarea-reportes{
+    width: 95%;
+    height: 100%;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0rem 0.5rem;
+}
+
+.label-foto {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: var(--blue);
+}
+
+.input-foto {
+  all: unset; 
+  border: none;
+  padding: 12px 16px;              
+  border-radius: 8px;              
+  background-color: var(--white);
+  cursor: pointer;
+  color: var(--blue);
+  margin-bottom: 1rem;
+  display: block;
+  font-size: 16px;                
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 80%;
+  max-width: 400px;
+}
+
+.input-foto::file-selector-button {
+  background-color: var(--orange1);
+  border: none;
+  color: var(--blue);
+  padding: 10px 16px;             
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 12px;
+  font-size: 15px;
+  transition: background-color 0.2s ease;
+  font-family: 'League Spartan', sans-serif; ;
+}
+
+.input-foto::file-selector-button:hover {
+  background-color: var(--gray);
+}
+
+.preview-foto {
+  margin-top: 10px;
+  width: 80%;
+  border-radius: 1rems;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.buttons-div-reportes{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.mapa{ 
+    height: 250px; 
+    width: 100%;     
+    border-radius: 10px; 
+    margin-bottom: 1rem; 
+}
+
+@media(max-width:780px){
+    .columnas-container-reportes{
+        flex-direction: column;
+    }
+
+    .buttons-div-reportes{
+        flex-direction: column;
+    }
+}

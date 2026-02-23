@@ -1,0 +1,154 @@
+/*
+Este archivo define los estilos de RightContainer, un panel lateral derecho que muestra 
+los datos de contacto y ofrece accesos al módulo educativo y a la creación de reportes.
+
+Estilos principales del componente:
+  - right-container: contenedor principal; establece tamaño y disposición general.  
+    Incluye una regla @media (máx. 768 px) que lo desplaza fuera de pantalla en móviles.
+  - toggle-right-container-button: botón visible solo en pantallas ≤ 768 px para abrir/cerrar el panel.
+  - right-container.open: combinación de clases que vuelve a mostrar el panel cuando se pulsa el botón toggle.
+
+Elementos internos del RightContainer:
+  - contact: contenedor de la información de contacto.  
+  - .contact h2  Estilo del título.  
+  - .contact span Estilo de los textos descriptivos.
+  - call-to-action: contenedor del acceso al módulo educativo.  
+    - .call-to-action h2 Estilo del título.
+  - call-to-action-redirect: enlace de redirección dentro de call‑to‑action.
+  - imagen-previa: imagen ilustrativa situada junto al enlace de redirección.
+  - create-report-redirect: contenedor/enlace que actúa como botón para crear reportes.  
+    - .create-report-redirect h2 Estilo del título.
+  - report-link: enlace interno dentro del botón de reporte.
+  - icono-boton: icono de lápiz que acompaña al botón de crear reporte.
+*/
+
+/*Estilos del contenedor principal y su botón de apertura en pantallas menores a 768px*/
+.right-container {
+    flex: 0 0 300px;
+    background-color: var(--white);
+    border-left: 1px solid var(--gray);
+    padding: var(--spacing-unit);
+    box-sizing: border-box; 
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out; 
+}
+
+.toggle-right-container-button {
+    display: none; 
+    position: fixed; 
+    bottom: 0.5rem; 
+    right: 0.5rem; 
+    z-index: 999; 
+    background-color: var(--orange1);
+    color: var(--blue);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.5rem; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+@media (max-width: 768px) { 
+    .right-container {
+        position: fixed; 
+        top: 0; 
+        right: 0; 
+        width: 250px; 
+        height: 100%; 
+        transform: translateX(100%); 
+        border-left: none; 
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2); 
+        z-index: 998; 
+    }
+
+    .right-container.open {
+        transform: translateX(0); 
+    }
+
+    .toggle-right-container-button {
+        display: block;
+    }
+}
+
+/*Estilos del contenedor para contactos, con su titulo y su span para textos*/
+.contact {
+    flex: auto;
+    background-color: var(--orange2);
+    padding: 0.5rem 0.5rem;
+    border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.contact h2 {
+    margin-top: 0;
+    margin-bottom: 0rem;
+    text-align: center;
+}
+
+.contact span {
+    margin-left: 1rem;
+    margin-top: 0;
+}
+
+
+/*Estilos del contenedor para el acceso al módulo educativo junto con
+su link de redirección, su título y su imágen.*/
+.call-to-action {
+    flex: auto;
+    background-color: var(--orange2);
+    padding: 0.5rem 0.5rem;
+    border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.call-to-action a {
+    text-decoration: none; 
+}
+
+.call-to-action h2 {
+    margin-top: 0.2rem;
+    margin-bottom: 0rem;
+    text-align: center;
+    color: var(--blue); 
+}
+
+.imagen-previa {
+    height: 100%;
+    width: 100%;
+    object-fit: contain; 
+    border-radius: 2rem;
+}
+
+/*Estilos del contenedor para el acceso a crear reportes junto con
+su link de redirección, su título y su ícono.*/
+.create-report-redirect {
+    background-color: var(--orange1);
+    padding: 1rem;
+    border-radius: 2rem;
+    margin-bottom: 1rem;
+}
+
+.report-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    justify-content: center;
+}
+
+.icono-boton {
+    height: 2rem;
+    width: 2rem;
+    object-fit: contain;
+}
+
+.create-report-redirect h2 {
+    margin: 0;
+    color: var(--blue);
+    font-size: 1.5rem;
+}
