@@ -1,54 +1,52 @@
+
 """
-Configuración de conexión a MongoDB
+Configuración de conexión a PostgreSQL/Supabase usando SQLAlchemy
 """
-from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
 import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
 
-# Variable global para la base de datos
-db = None
+# Importar modelos de datos
+from models.user import User
+from models.password_reset_token import PasswordResetToken
+from sqlalchemy.ext.declarative import declarative_base
 
-def init_db(app=None):
-    """Inicializar conexión a MongoDB"""
-    global db
-    
+from dotenv import load_dotenv
+load_dotenv()
+
+from config.base import Base
+
+# Obtener URL de conexión desde variables de entorno
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+# Crear el engine de SQLAlchemy con parámetros recomendados para PgBouncer (Supabase pooler)
+engine = create_engine(
+    DATABASE_URL,
+    echo=True,
+    pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=0,
+    pool_recycle=3600
+)
+
+# Crear la fábrica de sesiones
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def init_db():
+    """Inicializa la base de datos y crea las tablas si no existen."""
     try:
-        # Obtener URI de MongoDB desde variables de entorno
-        mongo_uri = os.getenv('MONGO_URI', 'mongodb://localhost:27017/mascotas-app')
-        
-        # Log de conexión (sin mostrar contraseña)
-        uri_safe = mongo_uri.replace(r':([^:@]+)@', ':***@') if ':' in mongo_uri else mongo_uri
-        print(f'🔗 Conectando a MongoDB: {uri_safe}')
-        
-        # Crear cliente de MongoDB
-        client = MongoClient(mongo_uri)
-        
-        # Probar la conexión
-        client.admin.command('ping')
-        
-        # Obtener la base de datos
-        db_name = 'mascotas-app'
-        db = client[db_name]
-        
-        print(f'✅ MongoDB Connected: {client.address}')
-        print(f'📊 Database: {db_name}')
-        
-        return db
-        
-    except ConnectionFailure as e:
-        print(f'❌ Error connecting to MongoDB: {e}')
-        if 'authentication' in str(e).lower():
-            print('   🔑 Verifica tu usuario y contraseña en MongoDB Atlas')
-        if 'network' in str(e).lower():
-            print('   🌐 Verifica tu conexión a internet')
+        print(f'Conectando a PostgreSQL/Supabase: {DATABASE_URL}')
+        # Importa los modelos para que se creen las tablas
+        from models.user import User
+        from models.password_reset_token import PasswordResetToken
+        Base.metadata.create_all(bind=engine)
+        print('Tablas creadas y conexión exitosa.')
+    except OperationalError as e:
+        print(f'Error conectando a la base de datos: {e}')
         raise e
-    except Exception as e:
-        print(f'❌ Unexpected error: {e}')
-        raise e
+
+from config.database import SessionLocal
 
 def get_db():
-    """Obtener instancia de la base de datos"""
-    global db
-    if db is None:
-        raise Exception('Database not initialized. Call init_db() first.')
-    return db
+    return SessionLocal()
