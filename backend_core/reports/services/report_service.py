@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 from geoalchemy2.elements import WKTElement
+from geoalchemy2.shape import to_shape
 
 from reports.models.report import Report
 from reports.models.report_image import ReportImage
@@ -77,6 +78,47 @@ class ReportService:
 
         return report
     
+
+    def update_report(
+        self,
+        report_id,
+        user_id,
+        pet_name=None,
+        description=None,
+        reward=None,
+        last_seen_date=None,
+        lat=None,
+        lng=None
+    ):
+
+        report = self.report_repo.get_by_id(report_id)
+
+        if not report:
+            raise ValueError("Report not found")
+
+        if report.user_id != user_id:
+            raise PermissionError("You can only edit your own reports")
+
+        if report.status != "open":
+            raise ValueError("Closed reports cannot be edited")
+
+        if pet_name:
+            report.pet_name = pet_name
+
+        if description:
+            report.description = description
+
+        if reward:
+            report.reward = reward
+
+        if last_seen_date:
+            report.last_seen_date = last_seen_date
+
+        if lat and lng:
+            report.location = WKTElement(f"POINT({lng} {lat})", srid=4326)
+
+        return report
+    
     def get_feed(self, lat, lng, radius, limit, offset, pet_type=None):
 
         results = self.report_repo.get_feed(
@@ -111,8 +153,10 @@ class ReportService:
         if not report:
             raise ValueError("Report not found")
 
-        lat = report.location.data["coordinates"][1]
-        lng = report.location.data["coordinates"][0]
+        point = to_shape(report.location)
+
+        lat = point.y
+        lng = point.x
 
         return {
             "id": report.id,
@@ -137,3 +181,31 @@ class ReportService:
                 for img in report.images
             ]
         }
+    
+    def get_user_reports(self, user_id, page=1, limit=10):
+
+        reports = self.report_repo.get_by_user(user_id, page, limit)
+
+        result = []
+
+        for r in reports:
+
+            images = self.image_repo.get_by_report(r.id)
+
+            result.append({
+                "id": r.id,
+                "pet_name": r.pet_name,
+                "pet_type": r.pet_type,
+                "status": r.status,
+                "reward": r.reward,
+                "created_at": r.created_at,
+                "images": [
+                    {
+                        "url": img.url,
+                        "thumbnail": img.thumbnail_url
+                    }
+                    for img in images
+                ]
+            })
+
+        return result

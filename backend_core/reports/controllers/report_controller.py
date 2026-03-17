@@ -83,3 +83,39 @@ class ReportController:
         report = service.get_report(report_id)
 
         return jsonify(report)
+    
+    @staticmethod
+    @with_db
+    def get_my_reports(db):
+
+        service = ReportService(db)
+
+        page = int(request.args.get("page", 1))
+        limit = int(request.args.get("limit", 10))
+
+        reports = service.get_user_reports(g.user_id, page, limit)
+
+        return jsonify(reports)
+    
+    @staticmethod
+    @with_db
+    def update_report(db, report_id):
+
+        service = ReportService(db)
+
+        data = request.json
+
+        service.update_report(
+            report_id,
+            g.user_id,
+            pet_name=data.get("pet_name"),
+            description=data.get("description"),
+            reward=data.get("reward"),
+            last_seen_date=data.get("last_seen_date"),
+            lat=data.get("lat"),
+            lng=data.get("lng")
+        )
+
+        return jsonify({
+            "message": "Report updated"
+    })

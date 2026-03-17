@@ -28,6 +28,23 @@ class ReportRepository:
             .first()
         )
     
+    # -------------------------
+    # GET BY USER
+    # -------------------------
+
+    def get_by_user(self, user_id: int, page: int = 1, limit: int = 10):
+
+        offset = (page - 1) * limit
+
+        return (
+            self.db.query(Report)
+            .filter(Report.user_id == user_id)
+            .order_by(desc(Report.created_at))
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+    
     def delete(self, report: Report):
         
         self.db.delete(report)

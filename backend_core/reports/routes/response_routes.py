@@ -33,3 +33,8 @@ def reject_response(response_id):
 @auth_required
 def mistaken_response(response_id):
     return ResponseController.mistaken_response(response_id)
+
+@response_routes.route("/responses/<int:response_id>", methods=["PATCH"])
+@auth_required
+def update_response(response_id):
+    return ResponseController.update_response(response_id)

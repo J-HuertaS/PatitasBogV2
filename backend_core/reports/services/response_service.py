@@ -42,6 +42,11 @@ class ResponseService:
         # VALIDATIONS
         # -------------------------
 
+        report = self.report_repo.get_by_id(report_id)
+
+        if report.status == "closed":
+            raise ValueError("Report already closed. You cannot add more responses.")
+
         if type == "sighting" and (lat is None or lng is None):
             raise ValueError("Location required for sightings")
 
@@ -100,9 +105,9 @@ class ResponseService:
 
         return response
 
-    def get_responses_by_report(self, report_id):
+    def get_responses_by_report(self, report_id, page=1, limit=10):
 
-        responses = self.response_repo.get_by_report(report_id)
+        responses = self.response_repo.get_by_report(report_id, page, limit)
 
         result = []
 
@@ -137,7 +142,13 @@ class ResponseService:
         report = self.report_repo.get_by_id(response.report_id)
 
         if report.user_id != user_id:
-            raise PermissionError("Only the report owner can confirm responses")
+            raise PermissionError("You are not allowed to confirm this response")
+        
+        if response.type == "sighting":
+            raise ValueError("Sighting responses cannot be confirmed")
+        
+        if report.status == "closed":
+            raise ValueError("Report already closed")
 
         response.status = "confirmed"
 
@@ -175,5 +186,35 @@ class ResponseService:
             raise PermissionError("Only the report owner can modify responses")
 
         response.status = "mistaken"
+
+        return response
+    
+    def delete_response(self):
+        # pending for implementation
+        return 0
+    
+    def update_response(self, response_id, user_id, comment=None, lat=None, lng=None):
+
+        response = self.response_repo.get_by_id(response_id)
+
+        if not response:
+            raise ValueError("Response not found")
+
+        if response.user_id != user_id:
+            raise PermissionError("You can only edit your own responses")
+
+        report = self.report_repo.get_by_id(response.report_id)
+
+        if report.status != "open":
+            raise ValueError("Cannot edit responses of closed reports")
+
+        if response.status != "pending":
+            raise ValueError("Only pending responses can be edited")
+
+        if comment:
+            response.comment = comment
+
+        if lat and lng:
+            response.location = WKTElement(f"POINT({lng} {lat})", srid=4326)
 
         return response

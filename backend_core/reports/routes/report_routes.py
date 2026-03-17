@@ -22,3 +22,13 @@ def get_report(report_id):
 def delete_report(report_id):
     return ReportController.delete_report(report_id)
 
+@report_routes.route("/users/me/reports", methods=["GET"])
+@auth_required
+def get_my_reports():
+    return ReportController.get_my_reports()
+
+@report_routes.route("/reports/<int:report_id>", methods=["PATCH"])
+@auth_required
+def update_report(report_id):
+    return ReportController.update_report(report_id)
+

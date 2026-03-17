@@ -38,15 +38,30 @@ class ResponseRepository:
     # GET BY REPORT
     # -------------------------
 
-    def get_by_report(self, report_id: int):
+    def get_by_report(self, report_id: int, page: int, limit: int):
+
+        offset = (page - 1) * limit
 
         return (
             self.db.query(Response)
             .filter(Response.report_id == report_id)
             .order_by(desc(Response.created_at))
+            .offset(offset)
+            .limit(limit)
             .all()
         )
+    
 
+    def get_by_user_and_report(self, user_id, report_id):
+
+        return (
+            self.db.query(Response)
+            .filter(
+                Response.user_id == user_id,
+                Response.report_id == report_id
+            )
+            .first()
+        )
 
     # -------------------------
     # DELETE

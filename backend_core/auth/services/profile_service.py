@@ -48,6 +48,7 @@ class ProfileService:
             "gender": user.gender,
             "address": user.address,
             "phone_number": user.phone_number,
+            "points": user.points,
             "created_at": user.created_at,
             "updated_at": user.updated_at
         }

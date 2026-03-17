@@ -53,7 +53,10 @@ class ResponseController:
 
         service = ResponseService(db)
 
-        responses = service.get_responses_by_report(report_id)
+        page = int(request.args.get("page", 1))
+        limit = int(request.args.get("limit", 10))
+
+        responses = service.get_responses_by_report(report_id, page, limit)
 
         return jsonify(responses)
     
@@ -63,14 +66,25 @@ class ResponseController:
 
         service = ResponseService(db)
 
-        service.confirm_response(
-            response_id,
-            g.user_id
-        )
+        try:
+            service.confirm_response(
+                response_id,
+                g.user_id
+            )
 
-        return jsonify({
-            "message": "Response confirmed"
-        })
+            return jsonify({
+                "message": "Response confirmed"
+            }), 200
+
+        except ValueError as e:
+            return jsonify({
+                "error": str(e)
+            }), 400
+
+        except PermissionError as e:
+            return jsonify({
+                "error": str(e)
+            }), 403
     
     @staticmethod
     @with_db
@@ -100,4 +114,24 @@ class ResponseController:
 
         return jsonify({
             "message": "Response marked as mistaken"
+        })
+    
+    @staticmethod
+    @with_db
+    def update_response(db, response_id):
+
+        service = ResponseService(db)
+
+        data = request.json
+
+        response = service.update_response(
+            response_id,
+            g.user_id,
+            comment=data.get("comment"),
+            lat=data.get("lat"),
+            lng=data.get("lng")
+        )
+
+        return jsonify({
+            "message": "Response updated"
         })
