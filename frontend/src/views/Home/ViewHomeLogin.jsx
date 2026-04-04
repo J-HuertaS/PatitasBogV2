@@ -1,58 +1,125 @@
-import React, { useState } from 'react';
-import Success from '../../components/Principal/Success';
-import Fail from '../../components/Principal/Fail';
-import HomeLogin from '../../components/Home/HomeLogin';
+"use client";
 
-// Vista principal del home cuando el usuario está logueado
+import { useState, useEffect, useContext } from "react";
+import { reportService } from "../../services/reportService";
+import styles from "../../styles/HomeLoggedIn.module.css";
+import FilterControls from "../../components/Home/FilterControls";
+import ReportButtons from "../../components/Home/ReportButtons";
+import ReportGrid from "../../components/Home/ReportGrid";
+import { AuthContext } from "../../contexts/AuthContext";
+
 const ViewHomeLogin = () => {
-  // Estados para mostrar el popup de éxito
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [titleSuccess, setTitleSuccess] = useState('');
-  const [endSuccess, setEndSuccess] = useState('');
-  const [redirectSuccess, setRedirectSuccess] = useState('');
+  const { user } = useContext(AuthContext);
 
-  // Handler para mostrar el popup de éxit
-  const handleChangeSuccess = (title, end, redirect) => {
-    setTitleSuccess(title);
-    setEndSuccess(end);
-    setRedirectSuccess(redirect);
-    setShowSuccessPopup(true);
-  };
+  const [reportes, setReportes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Estados para mostrar el popup de error
-  const [showFailPopup, setShowFailPopup] = useState(false);
-  const [titleFail, setTitleFail] = useState('');
-  const [bodyFail, setBodyFail] = useState('');
+  const [radiusFilter, setRadiusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [userLocation, setUserLocation] = useState({ lat: null, lng: null });
 
-  // Handler para mostrar el popup de error
-  const handleChangeFail = (title, body) => {
-    setTitleFail(title);
-    setBodyFail(body);
-    setShowFailPopup(true);
+  const [showMyReportsOnly, setShowMyReportsOnly] = useState(false);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
+
+  useEffect(() => {
+    console.log("reportes actualizado:", reportes);
+  }, [reportes]);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        () => {
+          // fallback Bogotá
+          setUserLocation({ lat: 4.6097, lng: -74.0817 });
+        }
+      );
+    } else {
+      setUserLocation({ lat: 4.6097, lng: -74.0817 });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userLocation.lat || !userLocation.lng) return;
+
+    const fetchReports = async () => {
+      try {
+        setLoading(true);
+
+        const response = await reportService.getAllReports(
+          userLocation.lat,
+          userLocation.lng,
+          radiusFilter === "all" ? null : Number(radiusFilter),
+          itemsPerPage,
+          (currentPage - 1) * itemsPerPage,
+          typeFilter === "all" ? null : typeFilter
+        );
+
+        console.log(response);
+
+        let data = Array.isArray(response) ? response : [];
+
+        if (showMyReportsOnly && user) {
+          const currentUserId = user?.id || user?.userId;
+
+          data = data.filter((r) => r.user_id === currentUserId);
+        }
+        
+        setReportes(data);
+      } catch (error) {
+        console.error("Error al obtener reportes:", error);
+        setReportes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, [userLocation, radiusFilter, typeFilter, currentPage, showMyReportsOnly, user]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
-    <div className="generic-container">
-      {/* Componente central que muestra la barra superior y los reportes */}
-      <HomeLogin
-        onChangeSuccess={handleChangeSuccess}
-        onChangeFail={handleChangeFail}
-      />
-      {/* Popup de éxito */}
-      {showSuccessPopup && (
-        <Success
-          title={titleSuccess}
-          end={endSuccess}
-          redirect={redirectSuccess}
-        />
-      )}
-      {/* Popup de error */}
-      {showFailPopup && (
-        <Fail
-          setShowFailPopup={setShowFailPopup}
-          title={titleFail}
-          body={bodyFail}
-        />
+    <div className={styles.homeContainer}>
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          Cargando reportes...
+        </div>
+      ) : (
+        <>
+          <div className={styles.topControls}>
+            <FilterControls
+              radiusFilter={radiusFilter}
+              setRadiusFilter={setRadiusFilter}
+              typeFilter={typeFilter}
+              setTypeFilter={setTypeFilter}
+              totalResults={reportes.length}
+            />
+
+            <ReportButtons
+              showMyReportsOnly={showMyReportsOnly}
+              toggleMyReports={() =>
+                setShowMyReportsOnly((prev) => !prev)
+              }
+            />
+          </div>
+
+          <ReportGrid
+            reports={reportes}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
     </div>
   );

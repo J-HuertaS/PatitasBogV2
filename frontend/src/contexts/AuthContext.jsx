@@ -1,36 +1,59 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
-// Creamos el contexto
 export const AuthContext = createContext();
 
-// Proveedor que envuelve tu app
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('authToken'));
+  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // ⏳ Cargando estado inicial
 
   useEffect(() => {
-    const checkToken = () => {
-      const token = localStorage.getItem('authToken');
-      setIsAuthenticated(!!token);
-    };
-
-    // Escucha cambios al storage (desde otras pestañas o logout/login)
-    window.addEventListener('storage', checkToken);
-
-    return () => window.removeEventListener('storage', checkToken);
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      setToken(storedToken);
+      try {
+        const decoded = jwtDecode(storedToken);
+        // Aseguramos que tenga user._id si solo viene userId en el token
+        setUser({ ...decoded, _id: decoded.userId || decoded._id });
+      } catch (err) {
+        console.error("Token inválido", err);
+        setUser(null);
+        setToken(null);
+      }
+    }
+    setLoading(false);
   }, []);
 
-  const login = (token) => {
-    localStorage.setItem('authToken', token);
-    setIsAuthenticated(true);
+  const login = (newToken) => {
+    localStorage.setItem('authToken', newToken);
+    setToken(newToken);
+    try {
+      const decoded = jwtDecode(newToken);
+      setUser({ ...decoded, _id: decoded.userId || decoded._id });
+    } catch (err) {
+      console.error("Token inválido en login:", err);
+      setUser(null);
+    }
   };
 
   const logout = () => {
     localStorage.removeItem('authToken');
-    setIsAuthenticated(false);
+    setToken(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        user,
+        isAuthenticated: !!token,
+        loading,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

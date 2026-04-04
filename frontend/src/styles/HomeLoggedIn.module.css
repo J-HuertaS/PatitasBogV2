@@ -1,0 +1,687 @@
+:root {
+  /* Variables responsivas para las cards */
+  --card-width: 320px;
+  --card-gap: 2rem;
+}
+
+/* General Container */
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-3); /* Remove padding here, header will handle top spacing */
+  min-height: 100vh;
+  background-color: var(--color-principal-1); /* Updated to match mockup background */
+  font-family: var(--font-main);
+}
+
+/* Loading State */
+.loadingContainer {
+  font-size: 1.2rem;
+  color: var(--color-principal-2);
+  margin-top: 5rem;
+}
+
+/* Top Controls (Filters and Buttons) */
+.topControls {
+  width: 100%;
+  max-width: 1000px; /* Reduced max-width for a narrower layout */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-2);
+  background-color: var(--color-neutro-1);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Filters Container */
+.filtersContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  align-items: flex-start; /* Align items to the top */
+  flex: 1; /* Allow it to take available space */
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  gap: 0.25rem;
+}
+
+.filterLabel {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--color-neutro-3);
+}
+
+.filterSelect {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  font-size: 0.9rem;
+  color: var(--color-neutro-3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: var(--color-principal-2);
+  box-shadow: 0 0 0 2px rgba(147, 115, 21, 0.2);
+}
+
+/* Results Counter - Adjusted for left alignment and below filters */
+.resultsCounter {
+  font-size: 0.9rem;
+  color: var(--color-principal-2);
+  font-weight: 500;
+  width: 100%; /* Take full width to go to next line */
+  text-align: left; /* Align text to the left */
+  margin-top: 0.5rem; /* Add some space from filters above */
+  margin-left: 0; /* Remove previous margin */
+}
+
+/* Report Buttons Container */
+.reportButtonsContainer {
+  display: flex;
+  width: 40;
+  gap: var(--spacing-2);
+  font-family: var(--font-main);
+}
+
+.reportButton,
+.reportButtonPrimary {
+  font-family: var(--font-main);
+  font-size: var(--fs-base);
+  padding: var(--spacing-1) var(--spacing-3); /* Increased horizontal padding */
+  border-radius: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer; /* Ensure button has pointer cursor */
+}
+
+.reportButton {
+  font-size: var(--fs-base);
+  font-family: var(--font-main);
+  background-color: var(--color-principal-2); /* Olive green from mockup */
+  color: var(--color-neutro-1); /* White text */
+  border: 1px solid var(--color-principal-2);
+}
+
+.reportButton:hover {
+  background-color: #7a5f17; /* Darker olive green */
+  border-color: #7a5f17;
+}
+
+.reportButtonPrimary {
+  font-family: var(--font-main);
+  background-color: var(--color-principal-3); /* Pink from mockup */
+  color: var(--color-neutro-1); /* White text */
+  border: 1px solid var(--color-principal-3);
+}
+
+.reportButtonPrimary:hover {
+  background-color: #a3164d; /* Darker pink */
+  border-color: #a3164d;
+}
+
+/* New style for active "Mis Reportes" button */
+.reportButtonActive {
+  font-family: var(--font-main);
+  background-color: var(--color-principal-3); /* Pink when active */
+  border-color: var(--color-principal-3);
+  color: var(--color-neutro-1); /* White text */
+}
+.reportButtonActive:hover {
+  background-color: #a3164d; /* Darker pink on hover when active */
+  border-color: #a3164d;
+}
+
+/* Reports Grid Container */
+.reportsGridContainer {
+  width: 100%;
+  max-width: 80dvw; /* Reduced max-width for a narrower layout */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--card-gap);
+  
+}
+
+.reportsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, var(--card-width));
+  gap: var(--spacing-3);
+  width: 100%;
+  justify-content: center;
+  margin: 0 auto;     /* esto lo centra horizontalmente */
+}
+
+/* No Results Message */
+.noResultsContainer {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: var(--color-neutro-1);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 600px;
+  margin-top: 2rem;
+}
+
+.noResultsContainer h3 {
+  color: var(--color-principal-2);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.noResultsContainer p {
+  color: #707214;
+  font-size: 1rem;
+}
+
+/* Pet Card - Styles from your input */
+.petCard {
+  flex-shrink: 0;
+  width: var(--card-width);
+  height: 480px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.petCard:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px) scale(1.02);
+  z-index: 10;
+}
+
+.petImageContainer {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background-color: #f8f9fa;
+  overflow: hidden;
+}
+
+.petImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.petCard:hover .petImage {
+  transform: scale(1.1);
+}
+
+/* Existing pet card content styles */
+.statusBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.statusPerdido {
+  background-color: var(--color-principal-3); /* Pink for lost */
+}
+
+.statusEncontrado {
+  background-color: var(--color-principal-2); /* Olive green for found */
+}
+
+.petCardContent {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.petName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-neutro-3);
+  margin: 0;
+}
+
+.petStatusText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.petStatusText.perdido {
+  color: var(--color-principal-3);
+}
+
+.petStatusText.encontrado {
+  color: var(--color-principal-2);
+}
+
+.petDescription {
+  font-size: 0.9rem;
+  color: #707214;
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pagination Controls */
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.paginationButton {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 0.5rem;
+  background-color: var(--color-neutro-1);
+  color: var(--color-neutro-3);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #f0efe7;
+  border-color: var(--color-principal-2);
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageNumber {
+  font-size: 1rem;
+  color: var(--color-neutro-3);
+  font-weight: 500;
+}
+
+/* Bottom Notice */
+.bottomNotice {
+  margin-top: 3rem;
+  padding: 1rem 2rem;
+  background-color: var(--color-principal-1); /* Warm color from previous designs */
+  border-radius: 0.75rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bottomNotice p {
+  color: var(--color-neutro-3);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1440px) {
+  :root {
+    --card-width: 300px; /* Adjusted for 3 columns in 1000px width */
+    --card-gap: 1.5rem;
+  }
+  
+  .reportsGridContainer,
+  .topControls {
+    max-width: 1000px; /* Maintain narrower layout */
+  }
+  .reportsGrid {
+    grid-template-columns: repeat(auto-fit, var(--card-width));
+
+    gap: var(--card-gap);
+  }
+  
+}
+
+@media (max-width: 1024px) {
+
+  :root {
+    --card-width: 250px;
+    --card-gap: 1.5rem;
+  }
+
+  .topControls {
+    flex-direction: column;
+    align-items: flex-start; /* Align filters to start */
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 90%; /* Adjust max-width for tablets */
+  }
+
+  .filtersContainer {
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start; /* Keep filters aligned to start */
+  }
+
+  .reportButtonsContainer {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .reportsGridContainer {
+    max-width: 90%; /* Adjust max-width for tablets */
+  }
+
+  .reportsGrid {
+    grid-template-columns: repeat(auto-fit, var(--card-width));
+    gap: 1.5rem;
+  }
+
+  .resultsCounter {
+    margin-left: 0;
+    text-align: center; /* Keep left aligned */
+    width: 100%;
+  }
+
+  
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-width: 200px;
+    --card-gap: 1rem;
+  }
+
+  .topControls {
+    padding: 0.75rem;
+    max-width: 95%; /* Adjust max-width for smaller tablets */
+  }
+
+  .filtersContainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterGroup {
+    width: 100%;
+  }
+
+  .filterSelect {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .resultsCounter {
+    margin-left: 0;
+    text-align: center; /* Keep left aligned */
+    width: 100%;
+  }
+
+  .reportButtonsContainer {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .reportButton,
+  .reportButtonPrimary {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .reportsGridContainer {
+    max-width: 95%; /* Adjust max-width for smaller tablets */
+  }
+
+  .reportsGrid {
+    grid-template-columns: repeat(auto-fit, var(--card-width));
+    gap: 1rem;
+  }
+  
+
+  .petImageContainer {
+    height: 160px;
+  }
+
+  .petName {
+    font-size: 1.1rem;
+  }
+
+  .petDescription {
+    font-size: 0.85rem;
+  }
+
+  .paginationControls {
+    flex-direction: column; /* Stack pagination buttons vertically */
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .petCard {
+    max-height: 300px;
+  }
+
+  .paginationButton {
+    width: 100%; /* Make pagination buttons full width */
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .pageNumber {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainHeader {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .headerLogoText {
+    font-size: 1.3rem;
+  }
+
+  .headerNavList {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .topControls {
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;
+    max-width: 100%; /* Full width on small mobiles */
+  }
+
+  .reportsGridContainer {
+    max-width: 100%; /* Full width on small mobiles */
+  }
+
+  .reportsGrid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+    gap: 1rem;
+  }
+  :root {
+    --card-width: 100%; /* Card takes full width */
+    --card-gap: 1rem;
+  }
+
+  .petImageContainer {
+    height: 180px; /* Make images slightly larger on single column */
+  }
+
+  .petCard {
+    max-width: 300px; /* Constrain card width */
+    max-height: 350px;
+    margin: 0 auto; /* Center cards */
+  }
+
+  .bottomNotice {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .paginationControls {
+    flex-direction: column; /* Ensure vertical stacking */
+    gap: 0.5rem;
+  }
+
+  .paginationButton {
+    width: 100%; /* Ensure full width */
+  }
+}
+
+/* Report Detail Page Styles */
+.reportDetailCard {
+  background-color: var(--color-neutro-1);
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  width: 100%;
+  margin-top: var(--spacing-4);
+  overflow: hidden;
+}
+
+.reportDetailImageContainer {
+  position: relative;
+  width: 100%;
+  height: 400px; /* Larger image for detail page */
+  background-color: #f8f9fa;
+  overflow: hidden;
+}
+
+.reportDetailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reportDetailContent {
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reportDetailName {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-neutro-3);
+  margin: 0;
+}
+
+.reportDetailStatus {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.reportDetailDescription {
+  font-size: var(--fs-label);
+  color: var(--color-neutro-3);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.reportDetailInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-neutro-3);
+  margin-bottom: 1.5rem;
+}
+
+.reportDetailInfo strong {
+  color: var(--color-principal-2);
+}
+
+.reportDetailBackButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-principal-2);
+  color: var(--color-neutro-1);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.reportDetailBackButton:hover {
+  background-color: #7a5f17;
+}
+
+/* Responsive adjustments for detail page */
+@media (max-width: 768px) {
+  .reportDetailCard {
+    max-width: 95%;
+    margin-top: var(--spacing-3);
+  }
+  .reportDetailImageContainer {
+    height: 300px;
+  }
+  .reportDetailName {
+    font-size: 1.75rem;
+  }
+  .reportDetailDescription,
+  .reportDetailInfo {
+    font-size: 0.9rem;
+  }
+  .reportDetailBackButton {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reportDetailCard {
+    max-width: 100%;
+    margin-top: var(--spacing-2);
+  }
+  .reportDetailImageContainer {
+    height: 250px;
+  }
+  .reportDetailName {
+    font-size: 1.5rem;
+  }
+  .reportDetailContent {
+    padding: var(--spacing-2);
+    gap: 0.75rem;
+  }
+  .reportDetailDescription,
+  .reportDetailInfo {
+    font-size: 0.85rem;
+  }
+  .reportDetailBackButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}

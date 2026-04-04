@@ -1,0 +1,161 @@
+.background {
+    background-color: var(--color-neutro-1);
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+.form_container {
+    padding: var(--spacing-3);
+    height: auto;
+    min-width: 58.75%;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-main);
+    align-items: center;
+    font-size: var(--fs-base);
+    margin: 0;
+}
+
+.title{
+    color: var(--color-principal-2);
+    font-weight: bold;
+    font-size: var(--fs-form-title);
+    line-height: 1;
+    margin: 0 0 var(--spacing-1) 0;
+}
+
+.form {
+    padding: 0;
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-3); 
+    height: auto;
+}
+
+.foto_perfil_container{
+    width: 361px;
+    height: 361px;
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.foto_perfil {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.options_column{
+    background-color: var(--color-neutro-1);
+    flex: 0 0 360px; 
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    width: 32.09%;
+    height: auto;
+}
+
+.fields_column{
+    background-color: var(--color-principal-1);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--spacing-3);
+    box-sizing: border-box;
+    flex: 1 1 auto;       
+    align-self: flex-start; 
+    height: auto;  
+}
+
+.options_button{
+    box-sizing: border-box;
+    margin-top: var(--spacing-1);
+    width: 100%;
+    padding: var(--spacing-2);
+    border-radius: 40px;
+    border: none;
+    background-color: var(--color-principal-2);
+    color: var(--color-neutro-1);
+    font-weight: bold;
+}
+
+.options_button:hover{
+    cursor: pointer;
+}
+
+.options_button2{
+    box-sizing: border-box;
+    margin-top: var(--spacing-1);
+    width: 100%;
+    padding: var(--spacing-2);
+    border-radius: 40px;
+    border: none;
+    background-color: var(--color-principal-3);
+    color: var(--color-neutro-1);
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    line-height: 1;
+}
+
+.options_button2:hover{
+    cursor: pointer;
+}
+
+.inputLabel {
+    margin-top: 0;
+    line-height: 1;
+    color: var(--color-neutro-3);
+    box-sizing: border-box;
+    margin-top: var(--spacing-1);
+}
+
+.firstinputLabel {
+    margin-top: 0;
+    line-height: 1;
+    color: var(--color-neutro-3);
+    box-sizing: border-box;
+}
+
+.formInput {
+    padding: var(--spacing-1) var(--spacing-2);
+    box-sizing: border-box;
+    margin-top: var(--spacing-1);
+    border-radius: 40px;
+    border: 1px solid var(--color-neutro-2);
+    background-color: var(--color-neutro-1);
+    width: 100%;
+}
+
+.mensaje_error{
+    display: block;
+    width: fit-content;
+    margin-top: var(--spacing-1);
+    line-height: 1;
+    color: var(--color-principal-3);
+    text-decoration: none;
+}
+
+.mensaje_exito{
+    display: block;
+    width: fit-content;
+    margin-top: var(--spacing-1);
+    line-height: 1;
+    color: var(--color-principal-2);
+    text-decoration: none;
+}
+
+@media(max-width:700px){
+    .background {
+        flex-direction: column;
+    }
+}

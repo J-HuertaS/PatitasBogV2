@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import desc
+from sqlalchemy import desc, literal
 
 from reports.models.report import Report
 from reports.models.report_image import ReportImage
@@ -51,18 +51,16 @@ class ReportRepository:
 
     def get_feed(
         self,
-        lat: float,
-        lng: float,
-        radius: int,
         limit: int,
         offset: int,
+        lat: float | None = None,
+        lng: float | None = None,
+        radius: int | None = None,
         pet_type: str | None = None
     ):
-        point = WKTElement(f"POINT({lng} {lat})",srid=4326)
-        distance = ST_Distance(Report.location, point).label("distance")
-
-        lat_col = ST_Y(Report.location.cast(Geometry)).label("lat")
-        lng_col = ST_X(Report.location.cast(Geometry)).label("lng")
+        distance = literal(0).label("distance")
+        lat_col = literal(0).label("lat")
+        lng_col = literal(0).label("lng")
 
         query = (
             self.db.query(
@@ -83,15 +81,25 @@ class ReportRepository:
             .filter(
                 ReportImage.is_primary == True
             )
-            .filter(
+            .filter(Report.status == "open")
+        )
+
+        if (radius):
+            point = WKTElement(f"POINT({lng} {lat})",srid=4326)
+            distance = ST_Distance(Report.location, point).label("distance")
+
+            lat_col = ST_Y(Report.location.cast(Geometry)).label("lat")
+            lng_col = ST_X(Report.location.cast(Geometry)).label("lng")
+
+        
+            query = (query.filter(
                 ST_DWithin(
                     Report.location,
                     point,
                     radius
                 )
             )
-            .filter(Report.status == "open")
-        )
+            )
 
         if pet_type:
             query = query.filter(Report.pet_type == pet_type)

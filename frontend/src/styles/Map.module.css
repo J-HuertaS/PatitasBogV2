@@ -1,0 +1,6 @@
+/* Estilos para el mapa de visualización (MapaLectura) */
+.mapa {
+  height: 100%; /* El mapa ocupará el 100% de la altura de su contenedor */
+  width: 100%; /* El mapa ocupará el 100% del ancho de su contenedor */
+  border-radius: 0.75rem; /* Asegura que el mapa tenga bordes redondeados si se usa en un contenedor con ellos */
+}

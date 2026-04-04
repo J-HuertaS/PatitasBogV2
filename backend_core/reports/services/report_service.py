@@ -122,11 +122,11 @@ class ReportService:
     def get_feed(self, lat, lng, radius, limit, offset, pet_type=None):
 
         results = self.report_repo.get_feed(
+            limit,
+            offset,
             lat,
             lng,
             radius,
-            limit,
-            offset,
             pet_type
         )
 

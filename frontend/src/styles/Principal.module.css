@@ -1,0 +1,39 @@
+.patitasLogoSection {
+  font-family: var(--font-logo);
+  font-size: var(--fs-big-logo);
+  color: var(--color-principal-2);
+  padding-bottom: var(--spacing-2);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.logoIcon {
+  width: auto;
+  height: 98px;
+}
+
+.patitasLogoText {
+  font-size: var(--fs-big-logo);
+  font-family: var(--font-logo);
+  font-weight: bold;
+  color: var(--color-principal-2);
+  margin: 0;
+}
+
+.logoText {
+  font-size: var(--fs-big-logo);
+  font-family: var(--font-logo);
+  font-weight: bold;
+  color: var(--color-principal-2);
+  margin: 0;
+}
+
+.logoText2 {
+  font-size: var(--fs-big-logo);
+  font-family: var(--font-logo);
+  font-weight: bold;
+  color: var(--color-principal-3);
+  margin: 0;
+}

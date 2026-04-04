@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 
@@ -31,6 +32,8 @@ def create_app():
     load_dotenv()
 
     app = Flask(__name__)
+
+    CORS(app, origins=["http://localhost:5173"])
 
     @app.route("/health")
     def health():

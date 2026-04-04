@@ -1,77 +1,132 @@
-// src/components/layout/Navbar.jsx
-import React, { useContext } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import '../../styles/Navbar.css';
-import { AuthContext } from '../../contexts/AuthContext';
+"use client"
+
+import { useContext, useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import styles from "../../styles/Navbar.module.css" 
+import { AuthContext } from "../../contexts/AuthContext"
 
 const Navbar = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // Traemos estado y acciones del contexto
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleLogout = () => {
-    logout();          // Limpia el token y actualiza el contexto
-    navigate('/');     // Redirige al home principal
-  };
+    logout()
+    navigate("/")
+    setIsMobileMenuOpen(false)
+  }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isMobileMenuOpen])
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1280) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   return (
-    <nav
-      className="navbar"
-      role="navigation"
-      aria-label="Barra de navegación principal"
-    >
-      <Link
-        to="/"
-        className="logo-link"
-        aria-label="Redirección a página de inicio"
-      >
-        <div className="logo-section">
-          <div className="logo-container">
-            <img
-              src="/images/logo.png"
-              alt="Logo de PatitasBog"
-              className="logo"
-            />
-          </div>
-          <span className="logo-text">PatitasBog</span>
+    <>
+      <nav className={styles.navbar}>
+        
+        <Link to={isAuthenticated ? "/home" : "/"} className={styles.logoSection} onClick={closeMobileMenu}>
+          <img src="/images/logo.svg" alt="Logo" className={styles.logoIcon} />
+          <span className={styles.logoText}>PatitasBog</span>
+        </Link>
+
+
+        {/* Desktop Navigation */}
+        <div className={styles.navLinks}>
+          <Link to="/about">Quiénes Somos</Link>
+          <Link to="/education">Módulo Educativo</Link>
+          {!isAuthenticated && (
+            <>
+              <Link to="/register">Registrarse</Link>
+              <Link to="/login">Iniciar Sesión</Link>
+            </>
+          )}
+          {isAuthenticated && (
+            <>
+              <Link to="/notificaciones">Notificaciones</Link>
+              <Link to="/perfil">Mi Perfil</Link>
+              <button onClick={handleLogout} className={styles.logoutBtn}>
+                Cerrar Sesión
+              </button>
+            </>
+          )}
         </div>
-      </Link>
 
-      <div className="nav-links">
-        {!isAuthenticated && (
-          <Link
-            to="/register"
-            className="link-register"
-            aria-label="Registrarse en la aplicación"
-          >
-            Regístrate
-          </Link>
-        )}
+        {/* Hamburger Button */}
+        <button
+          className={`${styles.hamburgerBtn} ${isMobileMenuOpen ? styles.open : ""}`}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle mobile menu"
+        >
+          <span className={styles.hamburgerLine}></span>
+          <span className={styles.hamburgerLine}></span>
+          <span className={styles.hamburgerLine}></span>
+        </button>
+      </nav>
 
-        {isAuthenticated ? (
-          <button
-            className="btn-login"
-            role="button"
-            aria-label="Cerrar sesión"
-            onClick={handleLogout}
-          >
-            Cerrar sesión
-          </button>
-        ) : (
-          <Link
-            to="/login"
-            className="btn-login"
-            role="button"
-            aria-label="Ir a la página de inicio de sesión"
-          >
-            Iniciar sesión
+      {/* Mobile Menu Overlay */}
+      <div className={`${styles.mobileMenuOverlay} ${isMobileMenuOpen ? styles.open : ""}`}>
+        <div className={styles.mobileNavLinks}>
+          <Link to="/about" onClick={closeMobileMenu}>
+            Quiénes Somos
           </Link>
-        )}
+          <Link to="/education" onClick={closeMobileMenu}>
+            Módulo Educativo
+          </Link>
+          {!isAuthenticated && (
+            <>
+              <Link to="/register" onClick={closeMobileMenu}>
+                Registrarse
+              </Link>
+              <Link to="/login" onClick={closeMobileMenu}>
+                Iniciar Sesión
+              </Link>
+            </>
+          )}
+          {isAuthenticated && (
+            <>
+              <Link to="/notificaciones" onClick={closeMobileMenu}>
+                Notificaciones
+              </Link>
+              <Link to="/perfil" onClick={closeMobileMenu}>
+                Mi Perfil
+              </Link>
+              <button onClick={handleLogout} className={styles.logoutBtn}>
+                Cerrar Sesión
+              </button>
+            </>
+          )}
+        </div>
       </div>
-    </nav>
-  );
-};
+    </>
+  )
+}
 
-export default Navbar;
+export default Navbar

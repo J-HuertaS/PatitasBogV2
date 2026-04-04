@@ -1,0 +1,229 @@
+/* Navbar */
+.navbar {
+  width: calc(100% - 16px);
+  height: 10%;
+  background-color: var(--color-neutro-1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-1) var(--spacing-1);
+  position: fixed;
+  z-index: 10000;
+}
+
+/* Logo */
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1) var(--spacing-1);
+  text-decoration: none;
+  z-index: 9999;
+}
+
+.logoIcon {
+  height: clamp(40px, 5vh, 52px);
+  width: auto;
+  object-fit: contain;
+}
+
+.logoText {
+  font-family: var(--font-logo);
+  font-size: clamp(1.5rem, 4vw, var(--fs-logo));
+  color: var(--color-principal-3);
+  font-weight: 700;
+  font-style: bold;
+  text-decoration: none;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Hamburger Menu Button - Solo visible en móvil */
+.hamburgerBtn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 9999;
+}
+
+.hamburgerLine {
+  width: 30px;
+  height: 3px;
+  background-color: var(--color-principal-3);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+  z-index: 9999;
+}
+
+/* Animación del hamburger cuando está abierto */
+.hamburgerBtn.open .hamburgerLine:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+  z-index: 9999;
+}
+
+.hamburgerBtn.open .hamburgerLine:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburgerBtn.open .hamburgerLine:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+  z-index: 9999;
+}
+
+/* Navegación Desktop */
+.navLinks {
+  display: flex;
+  align-items: center;
+  padding-right: var(--spacing-2);
+}
+
+.navLinks a,
+.logoutBtn {
+  font-size: var(--fs-link);
+  font-weight: 900;
+  font-family: var(--font-main);
+  text-decoration: none;
+  color: var(--color-principal-3);
+  background: none;
+  border: none;
+  font-style: bold;
+  cursor: pointer;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 2;
+  transition: all 0.3s ease;
+}
+
+.navLinks a:hover,
+.logoutBtn:hover {
+  text-decoration: underline;
+}
+
+.navLinks a:not(:last-child)::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.5em;
+  background-color: var(--color-principal-3);
+  vertical-align: middle;
+  margin-left: var(--spacing-1);
+  margin-right: var(--spacing-1);
+}
+
+/* Mobile Menu Overlay */
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-neutro-1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.mobileMenuOverlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile Navigation Links */
+.mobileNavLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.mobileNavLinks a,
+.mobileNavLinks .logoutBtn {
+  font-size: 2rem;
+  font-weight: 900;
+  font-family: var(--font-main);
+  text-decoration: none;
+  color: var(--color-principal-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1rem 2rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.mobileNavLinks a:hover,
+.mobileNavLinks .logoutBtn:hover {
+  background-color: rgba(199, 28, 94, 0.1);
+  text-decoration: none;
+  transform: scale(1.05);
+}
+
+/* Remove separators in mobile */
+.mobileNavLinks a::after {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1280px) {
+  /* Ocultar navegación desktop */
+  .navLinks {
+    display: none;
+  }
+
+  /* Mostrar botón hamburguesa */
+  .hamburgerBtn {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .logoText {
+    font-size: clamp(1.2rem, 5vw, 2rem);
+  }
+
+  .mobileNavLinks a,
+  .mobileNavLinks .logoutBtn {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .logoIcon {
+    height: clamp(32px, 4vh, 40px);
+  }
+
+  .mobileNavLinks a,
+  .mobileNavLinks .logoutBtn {
+    font-size: 1.25rem;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+/* Prevent body scroll when mobile menu is open */
+body.mobileMenuOpen {
+  overflow: hidden;
+}

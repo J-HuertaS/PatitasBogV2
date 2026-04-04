@@ -1,221 +1,46 @@
-/*
-Este archivo define estilos globales aplicados a toda la página web. Su propósito es establecer 
-la estructura base y eliminar estilos por defecto del navegador.
+/*Definición de variables con tipografías, colores y tamaños a utilizar*/
+:root {
+  /*Paleta de colores*/
+  --color-neutro-1: #f0efe7;
+  --color-neutro-2: #9d9c9c;
+  --color-neutro-3: #281d04;
+  --color-principal-1: #f4dcbe;
+  --color-principal-2: #937315;
+  --color-principal-3: #c71c5e;
 
-Configuraciones globales aplicadas:
-  - Eliminación de márgenes y padding por defecto del navegador.
-  - Carga y configuración de las fuentes de texto.
-  - Definición del grosor y estilo de fuente predeterminados.
-  - Color base para el texto.
-  - Color de fondo general de la aplicación.
-  - Inhabilitación del overflow predeterminado.
+  /*Tipografías*/
+  --font-logo: "Aventi", sans-serif;
+  --font-main: "Satoshi", sans-serif;
 
-Además, se definen variables CSS reutilizables en distintos componentes del sistema de estilos:
+  /*Tamaños de fuente*/
+  --fs-base: 1rem;
+  --fs-label: 1.125rem;
+  --fs-link: 1.5rem;
+  --fs-medium: 2rem;
+  --fs-logo: 2.5rem;
+  --fs-big-logo: 4rem;
+  --fs-big-title: 4.375rem;
+  --fs-form-title: 2.5rem; 
+  --fs-form-notes: 1.125rem;
+  --fs-subtext: 0.75rem;
+  
+  /*Espaciamientos*/
+  --spacing-1: 0.6rem;
+  --spacing-2: 1.3rem;
+  --spacing-3: 2rem;
+  --spacing-4: 4rem;
 
-Colores:
-  - color-primary: utilizado en fondos de formularios y algunos botones.
-  - color-secondary: utilizado en títulos y botones destacados.
-  - color-complementary: utilizado en botones secundarios y campos de texto.
-  - color-text: color predeterminado del texto.
-  - color-background: color de fondo principal de la aplicación.
-  - color-error: fondo para mensajes de error.
-  - color-success: fondo para mensajes de éxito.
+  --navbar-height: 10%;
+}
 
-Dimensiones:
-  - navbar-height: altura de la barra de navegación.
-  - left-menu-width: ancho del menú lateral izquierdo.
-  - right-menu-width: ancho del menú lateral derecho.
-  - horizontal-margin: márgenes laterales estándar.
-  - vertical-margin: márgenes superior e inferior estándar.
-*/
-
+/*Configuración básica para eliminar márgenes del navegador*/
 html,
 body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: 'League Spartan', sans-serif; 
-    font-weight: 400; 
-    -webkit-font-smoothing: antialiased; 
-    -moz-osx-font-smoothing: grayscale; 
-    line-height: 1.5; 
-    color: var(--blue);
-    background-color: var(--white); 
-    overflow: hidden;
-}
-
-:root {
-    --orange2: #fad29d;
-    --orange1: #ec8238;
-    --gray: #d4d2cf;
-    --blue: #0b2a3f;
-    --white: #fdfaf5;
-    --red: #ff8c8c;
-    --green: #c1ff72;
-    --navbar-height: 50px;
-    --spacing-unit: 1rem;
-}
-
-#root {
-    padding: 0;
-}
-
-h1, h2, h3{
-    margin-top: 0.3rem;
-    margin-bottom: 0.2rem;
-    margin-left: 5%;
-    margin-right: 5%;
-}
-
-p{
-    margin-top: 0.3rem;
-    margin-bottom: 0.2rem;
-    margin-left: 5%;
-    margin-right: 5%;
-}
-
-span{
-    margin-top: 0.3rem;
-    margin-bottom: 0.2rem;
-    margin-left: 5%;
-    margin-right: 5%;
-}
-
-input{ 
-    height: 2rem;
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box; 
-    padding: 0rem 0.5rem;
-}
-
-select{ 
-    height: 2rem;
-    width: 90%;
-    margin-left: 5%;
-    margin-right: 5%;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box; 
-    padding: 0rem 0.5rem;
-}
-
-.button-principal{
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    margin-left: 3%;
-    margin-right: 3%;
-    background-color: var(--orange1);
-    color: var(--blue);
-    font-size: 1rem;
-    padding: 0.6rem 2rem;
-    border-radius: 2rem;
-    border: none;
-    font-weight: bold;
-    text-decoration: none;
-    font-family: 'League Spartan', sans-serif;
-}
-
-.button-principal:hover{
-    cursor: pointer;
-}
-
-.button-secondary{
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    margin-left: 3%;
-    margin-right: 3%;
-    background-color: var(--white);
-    color: var(--blue);
-    font-size: 1rem;
-    padding: 0.6rem 2rem;
-    border-radius: 2rem;
-    border: none;
-    font-weight: bold;
-    text-decoration: none;
-    font-family: 'League Spartan', sans-serif;
-}
-
-.button-secondary:hover{
-    cursor: pointer;
-}
-
-.button-three{
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    margin-left: 3%;
-    margin-right: 3%;
-    background-color: var(--gray);
-    color: var(--blue);
-    font-size: 1rem;
-    padding: 0.6rem 2rem;
-    border-radius: 2rem;
-    border: none;
-    font-weight: bold;
-    text-decoration: none;
-    font-family: 'League Spartan', sans-serif;
-}
-
-.button-three:hover{
-    cursor: pointer;
-}
-
-.button-four{
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    margin-left: 3%;
-    margin-right: 3%;
-    background-color: var(--orange2);
-    color: var(--blue);
-    font-size: 1rem;
-    padding: 0.6rem 2rem;
-    border-radius: 2rem;
-    border: none;
-    font-weight: bold;
-    text-decoration: none;
-    font-family: 'League Spartan', sans-serif;
-}
-
-.button-four:hover{
-    cursor: pointer;
-}
-
-.blocked-input{
-    margin-top: 0.2rem;
-    margin-bottom: 0.2rem;
-    margin-left: 10%;
-    margin-right: 10%;
-    background-color: var(--gray);
-    color: var(--blue);
-    font-size: 1rem;
-    padding: 0.3rem 4rem;
-    border: none;
-    font-weight: bold;
-    max-width:50%;
-    border-radius: 0.3rem;
-}
-
-.behind-input{
-    margin-bottom: 1rem;
-    margin-top: 0rem;
-}
-
-.title {
-    background-color: var(--orange1);
-    padding: 0% 20%;
-}
-
-.close {
-    background-color: var(--orange1);
-    padding: 0.75rem 0.75rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
-}
-
-.close:hover{
-    cursor: pointer;
+    min-width: max-content;
+    min-height: max-content;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
 }

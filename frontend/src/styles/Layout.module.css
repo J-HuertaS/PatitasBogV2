@@ -1,0 +1,16 @@
+/*view: contenedor global que ocupa toda la altura de la vista*/
+.view {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-neutro-1);
+}
+
+
+/*main_content_wrapper: contenedor ubicado dentro de la view debajo de la Navbar*/
+.main_content_wrapper {
+  padding-top: 10vh; 
+  flex-grow: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column; /* si estás apilando cosas verticalmente */
+}
