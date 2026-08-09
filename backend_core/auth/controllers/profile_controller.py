@@ -8,7 +8,6 @@ from flask import request, jsonify, g
 from auth.repositories.user_repository import UserRepository
 from auth.services.profile_service import ProfileService
 from common.services.audit_service import AuditService
-from common.security.auth_decorator import auth_required
 from common.services.storage_service import StorageService
 
 
@@ -22,7 +21,6 @@ class ProfileController:
         return ProfileService(user_repository, audit_service)
 
     @staticmethod
-    @auth_required
     def get_profile(db):
 
         profile_service = ProfileController.build_service(db)
@@ -44,7 +42,6 @@ class ProfileController:
 
 
     @staticmethod
-    @auth_required
     def update_profile(db):
 
         data = request.get_json()
@@ -60,7 +57,6 @@ class ProfileController:
 
 
     @staticmethod
-    @auth_required
     def upload_profile_picture(db):
 
         if "image" not in request.files:
@@ -96,16 +92,22 @@ class ProfileController:
         }), 200
     
     @staticmethod    
-    @auth_required
     def delete_profile_picture(db): 
 
         storage_service = StorageService()
 
+        if not g.user.profile_picture:
+            return jsonify({
+                        "message": "Profile picture deleted",
+                        "profile_picture": None
+                    }), 200
+
+        path = g.user.profile_picture.split('/Avatars/')[1]
+
         try:
 
-            storage_service.upload_profile_picture(
-                None,
-                g.user_id
+            storage_service.delete_file(
+                path
             )
 
         except ValueError as e:
@@ -121,10 +123,10 @@ class ProfileController:
             }), 400
 
         profile_service = ProfileController.build_service(db)
-
-        profile_service.upload_profile_picture(
+        
+        profile_service.update_profile(
             g.user_id,
-            None
+            {"profile_picture":None}
         )
 
         return jsonify({

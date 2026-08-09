@@ -97,7 +97,6 @@ class StorageService:
             square=True
         )
 
-
         filename = f"users/{user_id}/avatar.jpg"
 
         self.supabase.storage.from_(self.bucket).remove([filename])
@@ -212,6 +211,8 @@ class StorageService:
     # DELETE FILE
     # -------------------------------------------------
 
-    def delete_file(self, path):
-
+    def delete_file(self,path):
+        
         self.supabase.storage.from_(self.bucket).remove([path])
+
+        return True

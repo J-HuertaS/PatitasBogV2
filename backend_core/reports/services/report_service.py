@@ -118,6 +118,24 @@ class ReportService:
             report.location = WKTElement(f"POINT({lng} {lat})", srid=4326)
 
         return report
+
+    def delete_report(
+        self,
+        report_id,
+        user_id,
+    ):
+
+        report = self.report_repo.get_by_id(report_id)
+
+        if not report:
+            raise ValueError("Report not found")
+
+        if report.user_id != user_id:
+            raise PermissionError("You can only delete your own reports")
+
+        self.report_repo.delete(report)
+
+        return True
     
     def get_feed(self, lat, lng, radius, limit, offset, pet_type=None):
 

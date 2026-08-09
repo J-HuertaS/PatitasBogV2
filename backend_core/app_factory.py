@@ -18,7 +18,6 @@ from reports.models.report import Report
 from reports.models.report_image import ReportImage
 from reports.models.response import Response
 from reports.models.response_image import ResponseImage
-from reports.models.comment import Comment
 
 from auth.models.user import User
 from auth.models.password_reset_token import PasswordResetToken

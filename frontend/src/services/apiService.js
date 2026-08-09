@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5000/auth';
 
 class ApiService {
   // Configuración base para requests
@@ -92,7 +92,7 @@ class ApiService {
   }
 
   static async register(userData) {
-    return this.makeRequest('/users/register', {  // CORREGIDO: era /auth/register
+    return this.makeRequest('/register', {  // CORREGIDO: era /auth/register
       method: 'POST',
       body: JSON.stringify(userData)
     });

@@ -1,13 +1,12 @@
 from flask import request, jsonify, g
 
-from config.db_decorator import with_db
+
 
 from reports.services.response_service import ResponseService
 
 class ResponseController:
 
     @staticmethod
-    @with_db
     def create_response(db, report_id):
 
         service = ResponseService(db)
@@ -42,13 +41,16 @@ class ResponseController:
         
             return jsonify({"error":str(e)}), 400
 
+        except PermissionError as e:
+
+            return jsonify({"error":str(e)}), 403
+
         return jsonify({
             "id": response.id,
             "status": response.status
         }), 201
     
     @staticmethod
-    @with_db
     def get_responses(db, report_id):
 
         service = ResponseService(db)
@@ -56,12 +58,17 @@ class ResponseController:
         page = int(request.args.get("page", 1))
         limit = int(request.args.get("limit", 10))
 
-        responses = service.get_responses_by_report(report_id, page, limit)
+        try:
 
-        return jsonify(responses)
+            responses = service.get_responses_by_report(report_id, page, limit)
+
+        except ValueError as e:
+
+            return jsonify({"error":str(e)}), 400
+        
+        return jsonify(responses), 200
     
     @staticmethod
-    @with_db
     def confirm_response(db, response_id):
 
         service = ResponseService(db)
@@ -72,10 +79,6 @@ class ResponseController:
                 g.user_id
             )
 
-            return jsonify({
-                "message": "Response confirmed"
-            }), 200
-
         except ValueError as e:
             return jsonify({
                 "error": str(e)
@@ -85,53 +88,90 @@ class ResponseController:
             return jsonify({
                 "error": str(e)
             }), 403
+
+        return jsonify({
+            "message": "Response confirmed"
+        }), 200
     
     @staticmethod
-    @with_db
     def reject_response(db, response_id):
 
         service = ResponseService(db)
 
-        service.reject_response(
-            response_id,
-            g.user_id
-        )
+        try:
 
+            service.reject_response(
+                response_id,
+                g.user_id
+            )
+
+        except ValueError as e:
+                    return jsonify({
+                        "error": str(e)
+                    }), 400
+        
+        except PermissionError as e:
+            return jsonify({
+                "error": str(e)
+            }), 403
+        
         return jsonify({
             "message": "Response rejected"
-        })
-    
+        }), 200
+
     @staticmethod
-    @with_db
-    def mistaken_response(db, response_id):
+    def delete_response(db, response_id):
 
         service = ResponseService(db)
 
-        service.mistaken_response(
-            response_id,
-            g.user_id
-        )
+        try:
+
+            service.delete_response(
+                response_id,
+                g.user_id
+            )
+        
+        except ValueError as e:
+            return jsonify({
+                "error": str(e)
+            }), 400
+
+        except PermissionError as e:
+            return jsonify({
+                "error": str(e)
+            }), 403
 
         return jsonify({
-            "message": "Response marked as mistaken"
-        })
+            "message": "Response deleted"
+        }), 200
     
     @staticmethod
-    @with_db
     def update_response(db, response_id):
 
         service = ResponseService(db)
 
         data = request.json
 
-        response = service.update_response(
-            response_id,
-            g.user_id,
-            comment=data.get("comment"),
-            lat=data.get("lat"),
-            lng=data.get("lng")
-        )
+        try:
+        
+            service.update_response(
+                response_id,
+                g.user_id,
+                comment=data.get("comment"),
+                lat=data.get("lat"),
+                lng=data.get("lng")
+            )
+        
+        except ValueError as e:
+            return jsonify({
+                "error": str(e)
+            }), 400
+
+        except PermissionError as e:
+            return jsonify({
+                "error": str(e)
+            }), 403
 
         return jsonify({
             "message": "Response updated"
-        })
+        }), 200

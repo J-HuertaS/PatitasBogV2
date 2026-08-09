@@ -1,11 +1,9 @@
 from flask import request, jsonify, g
 
 from reports.services.report_service import ReportService
-from config.db_decorator import with_db
 
 class ReportController:
     @staticmethod
-    @with_db
     def create_report(db):
         data = request.form
 
@@ -48,9 +46,50 @@ class ReportController:
             "id": report.id,
             "message": "Report created successfully"
         }), 201
+
+    @staticmethod
+    def update_report(db, report_id):
+
+        service = ReportService(db)
+
+        data = request.json
+
+        service.update_report(
+            report_id,
+            g.user_id,
+            pet_name=data.get("pet_name"),
+            description=data.get("description"),
+            reward=data.get("reward"),
+            last_seen_date=data.get("last_seen_date"),
+            lat=data.get("lat"),
+            lng=data.get("lng")
+        )
+
+        return jsonify({
+            "message": "Report updated"
+    })
+
+    @staticmethod
+    def delete_report(db, report_id):
+
+        service = ReportService(db)
+
+        service.delete_report(report_id, g.user_id)
+
+        return jsonify({"message:":"Report deleted"}), 200
+
+
+
+    @staticmethod
+    def get_report(db, report_id):
+
+        service = ReportService(db)
+
+        report = service.get_report(report_id)
+
+        return jsonify(report)
     
     @staticmethod
-    @with_db
     def get_feed(db):
         service = ReportService(db)
 
@@ -74,18 +113,9 @@ class ReportController:
 
         return jsonify(reports)
     
-    @staticmethod
-    @with_db
-    def get_report(db, report_id):
-
-        service = ReportService(db)
-
-        report = service.get_report(report_id)
-
-        return jsonify(report)
+    
     
     @staticmethod
-    @with_db
     def get_my_reports(db):
 
         service = ReportService(db)
@@ -97,25 +127,7 @@ class ReportController:
 
         return jsonify(reports)
     
-    @staticmethod
-    @with_db
-    def update_report(db, report_id):
+    
 
-        service = ReportService(db)
+    
 
-        data = request.json
-
-        service.update_report(
-            report_id,
-            g.user_id,
-            pet_name=data.get("pet_name"),
-            description=data.get("description"),
-            reward=data.get("reward"),
-            last_seen_date=data.get("last_seen_date"),
-            lat=data.get("lat"),
-            lng=data.get("lng")
-        )
-
-        return jsonify({
-            "message": "Report updated"
-    })

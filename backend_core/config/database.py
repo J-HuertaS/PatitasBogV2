@@ -39,7 +39,6 @@ def init_db():
         from auth.models.password_reset_token import PasswordResetToken
         from reports.models.report import Report
         from reports.models.response import Response
-        from reports.models.comment import Comment
 
         Base.metadata.create_all(bind=engine)
 

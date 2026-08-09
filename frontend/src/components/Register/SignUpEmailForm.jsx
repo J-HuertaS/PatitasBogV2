@@ -54,6 +54,7 @@ const SignUpEmailForm = ({ onRegister, onFail, handleShowEmailForm, setGoogleErr
         try {
             const userData = {
                 full_name: nombre,
+                username: correo,
                 email: correo,
                 password,
             }

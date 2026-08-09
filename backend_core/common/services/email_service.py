@@ -2,6 +2,7 @@ import smtplib
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from threading import Thread
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -30,6 +31,13 @@ class EmailService:
         context -> variables para el template
         """
 
+        def _send_background():
+            # enviar correo
+            with smtplib.SMTP(self.smtp_server, self.smtp_port, timeout=10) as server:
+                server.starttls()
+                server.login(self.smtp_username, self.smtp_password)
+                server.send_message(message)
+
         # cargar template
         template = self.env.get_template(template_name)
 
@@ -45,11 +53,16 @@ class EmailService:
         html_part = MIMEText(html_content, "html")
         message.attach(html_part)
 
-        # enviar correo
-        with smtplib.SMTP(self.smtp_server, self.smtp_port, timeout=10) as server:
-            server.starttls()
-            server.login(self.smtp_username, self.smtp_password)
-            server.send_message(message)
+        thread = Thread(target=_send_background)
+        thread.daemon = True
+        thread.start()
+        return
+
+
+
+        
+
+        
 
     def send_password_reset_email(self, user_email, reset_token):
         """

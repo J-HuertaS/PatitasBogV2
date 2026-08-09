@@ -11,6 +11,9 @@ from reports.repositories.report_repository import ReportRepository
 from common.services.storage_service import StorageService
 
 
+from reports.services.reputation_service import ReputationService
+
+
 class ResponseService:
 
     def __init__(self, db):
@@ -22,6 +25,8 @@ class ResponseService:
         self.report_repo = ReportRepository(db)
 
         self.storage = StorageService()
+
+        self.reputation_service = ReputationService(db)
 
 
     def create_response(
@@ -35,7 +40,7 @@ class ResponseService:
         images=None
     ):
 
-        if type not in ["sighting", "found"]:
+        if type not in ["sighting", "finding"]:
             raise ValueError("Invalid response type")
 
         # -------------------------
@@ -43,6 +48,12 @@ class ResponseService:
         # -------------------------
 
         report = self.report_repo.get_by_id(report_id)
+
+        if user_id == report.user_id:
+            raise PermissionError("The owner report can't create responses")
+
+        if not report:
+            raise ValueError("Report not found")
 
         if report.status == "closed":
             raise ValueError("Report already closed. You cannot add more responses.")
@@ -107,6 +118,11 @@ class ResponseService:
 
     def get_responses_by_report(self, report_id, page=1, limit=10):
 
+        report = self.report_repo.get_by_id(report_id)
+
+        if not report:
+            raise ValueError("Report not found")
+
         responses = self.response_repo.get_by_report(report_id, page, limit)
 
         result = []
@@ -133,65 +149,93 @@ class ResponseService:
         return result
     
     def confirm_response(self, response_id, user_id):
+        # por ahora, marca como confirmado un hallazgo
 
         response = self.response_repo.get_by_id(response_id)
 
         if not response:
             raise ValueError("Response not found")
 
+        if response.status == "confirmed":
+            raise ValueError("Response already confirmed")
+
         report = self.report_repo.get_by_id(response.report_id)
 
+        if not report:
+            raise ValueError("Report not found")
+
         if report.user_id != user_id:
-            raise PermissionError("You are not allowed to confirm this response")
-        
-        if response.type == "sighting":
-            raise ValueError("Sighting responses cannot be confirmed")
+            raise PermissionError("Only the report owner can confirm responses")
         
         if report.status == "closed":
             raise ValueError("Report already closed")
 
         response.status = "confirmed"
 
-        report.status = "closed"
-        report.closed_at = datetime.utcnow()
+        if response.type == "finding":
+            report.status = "closed"
+            report.closed_at = datetime.utcnow()
+            # suma +20 puntos
+            self.reputation_service.add_points(response.user_id, 20)
+
+        if response.type == "sighting":
+            # suma +5 puntos
+            self.reputation_service.add_points(response.user_id, 5)
+
 
         return response
     
     def reject_response(self, response_id, user_id):
+        # por ahora, marca como rejected un hallazgo o un avistamiento
 
         response = self.response_repo.get_by_id(response_id)
-
+        
         if not response:
             raise ValueError("Response not found")
 
+        if response.status == "rejected":
+            raise ValueError("Response already rejected")
+
         report = self.report_repo.get_by_id(response.report_id)
+
+        if not report:
+            raise ValueError("Report not found")
 
         if report.user_id != user_id:
             raise PermissionError("Only the report owner can reject responses")
+        
+        if report.status == "closed":
+            raise ValueError("Report already closed")
 
         response.status = "rejected"
 
+        if response.type == "finding":
+            # resta -20 puntos
+            self.reputation_service.add_points(response.user_id, -20)
+
+        # en el caso de sighting no pasa nada ya que pudo haber sido una confusion.
+
         return response
     
-    def mistaken_response(self, response_id, user_id):
+    def delete_response(self, response_id, user_id):
 
         response = self.response_repo.get_by_id(response_id)
 
         if not response:
             raise ValueError("Response not found")
+        
+        if response.user_id != user_id:
+            raise PermissionError("You can only delete your own responses")
 
-        report = self.report_repo.get_by_id(response.report_id)
+        images = self.image_repo.get_by_response(response_id)
 
-        if report.user_id != user_id:
-            raise PermissionError("Only the report owner can modify responses")
+        for image in images:
+            self.storage.delete_file(image.path)
+            self.image_repo.delete(image)
 
-        response.status = "mistaken"
+        self.response_repo.delete(response)
 
-        return response
-    
-    def delete_response(self):
-        # pending for implementation
-        return 0
+        return True
     
     def update_response(self, response_id, user_id, comment=None, lat=None, lng=None):
 
@@ -204,6 +248,9 @@ class ResponseService:
             raise PermissionError("You can only edit your own responses")
 
         report = self.report_repo.get_by_id(response.report_id)
+
+        if not report:
+            raise ValueError("Report not found")
 
         if report.status != "open":
             raise ValueError("Cannot edit responses of closed reports")
