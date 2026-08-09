@@ -31,7 +31,14 @@ class AuthService:
 
     def register_user(self, user_data: dict) -> User:
 
-        self._validate_user_data(user_data)
+        existing_user = self.user_repository.get_by_email(user_data["email"])
+
+        if existing_user:
+            raise ValueError("Email already registered")
+
+        existing_user = self.user_repository.get_by_username(user_data["username"])
+        if existing_user:
+            raise ValueError("Username already taken")
 
         user_data["password_hash"] = hash_password(user_data["password"])
         user_data.pop("password", None)
@@ -145,19 +152,6 @@ class AuthService:
 
         return user
 
+        
 
-    def _validate_user_data(self, user_data: dict):
-
-        required_fields = ["full_name", "email", "username", "password"]
-
-        for field in required_fields:
-            if not user_data.get(field):
-                raise ValueError(f"{field} is required")
-
-        existing_user = self.user_repository.get_by_email(user_data["email"])
-        if existing_user:
-            raise ValueError("Email already registered")
-
-        existing_user = self.user_repository.get_by_username(user_data["username"])
-        if existing_user:
-            raise ValueError("Username already taken")
+        

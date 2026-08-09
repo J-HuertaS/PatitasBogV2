@@ -9,6 +9,7 @@ from reports.models.report_image import ReportImage
 
 from reports.repositories.report_repository import ReportRepository
 from reports.repositories.report_image_repository import ReportImageRepository
+from auth.repositories.user_repository import UserRepository
 
 from common.services.storage_service import StorageService
 
@@ -20,6 +21,7 @@ class ReportService:
         self.db = db
         self.report_repo = ReportRepository(db)
         self.image_repo = ReportImageRepository(db)
+        self.user_repo = UserRepository(db)
 
         self.storage_service = StorageService()
 
@@ -51,8 +53,6 @@ class ReportService:
         )
 
         self.report_repo.create(report)
-
-        self.db.flush()
 
         if images:
 
@@ -117,6 +117,8 @@ class ReportService:
         if lat and lng:
             report.location = WKTElement(f"POINT({lng} {lat})", srid=4326)
 
+        self.report_repo.save(report)
+
         return report
 
     def delete_report(
@@ -132,6 +134,12 @@ class ReportService:
 
         if report.user_id != user_id:
             raise PermissionError("You can only delete your own reports")
+
+        images = self.image_repo.get_by_report(report_id)
+
+        for image in images:
+            self.storage_service.delete_file(image.path)
+            self.image_repo.delete(image)
 
         self.report_repo.delete(report)
 
@@ -201,6 +209,11 @@ class ReportService:
         }
     
     def get_user_reports(self, user_id, page=1, limit=10):
+
+        user = self.user_repo.get_by_id(user_id)
+
+        if not user:
+            raise ValueError("User not found")
 
         reports = self.report_repo.get_by_user(user_id, page, limit)
 

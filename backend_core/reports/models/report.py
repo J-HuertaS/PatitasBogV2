@@ -45,13 +45,6 @@ class Report(Base):
         cascade="all, delete-orphan"
     )
 
-    comments = relationship(
-        "Comment",
-        backref="report",
-        cascade="all, delete-orphan"
-    )
-
-
     images = relationship(
         "ReportImage",
         backref="report",

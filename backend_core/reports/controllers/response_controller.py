@@ -17,13 +17,20 @@ class ResponseController:
         lat = request.form.get("lat")
         lng = request.form.get("lng")
 
-        if lat:
-            lat = float(lat)
+        try:
+            if lat:
+                lat = float(lat)
 
-        if lng:
-            lng = float(lng)
+            if lng:
+                lng = float(lng)
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid lat/lng format"}), 400
 
         images = request.files.getlist("images")
+
+        # verificar campos no nulos
+        if not type:
+            return jsonify({"error":"Type must be specified"})
 
         try:
 
@@ -55,8 +62,12 @@ class ResponseController:
 
         service = ResponseService(db)
 
-        page = int(request.args.get("page", 1))
-        limit = int(request.args.get("limit", 10))
+        # Try 1: Validar entrada
+        try:
+            page = int(request.args.get("page", 1))
+            limit = int(request.args.get("limit", 10))
+        except (ValueError, TypeError):
+            return jsonify({"error": "Invalid page/limit format"}), 400
 
         try:
 
@@ -151,6 +162,17 @@ class ResponseController:
         service = ResponseService(db)
 
         data = request.json
+
+        lat = data.get("lat")
+        lng = data.get("lng")
+
+        try:
+            if lat:
+                lat = float(lat)  # ← Convierte
+            if lng:
+                lng = float(lng)  # ← Convierte
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid lat/lng format"}), 400
 
         try:
         

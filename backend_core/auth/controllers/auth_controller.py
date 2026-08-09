@@ -39,6 +39,12 @@ class AuthController:
 
         auth_service = AuthController.build_service(db)
 
+        required_fields = ["full_name", "email", "username", "password"]
+        
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"error": f"{field} is required"}), 400
+
         try:
             user = auth_service.register_user(data)
 

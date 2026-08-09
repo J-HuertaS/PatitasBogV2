@@ -16,7 +16,13 @@ class ReportRepository:
         self.db = db
 
     def create(self, report: Report):
+        """Crea nuevo registro y asigna ID"""
+        self.db.add(report)
+        self.db.flush()
+        return report
 
+    def save(self, report: Report):
+        """Guarda cambios en la sesión (sin flush)"""
         self.db.add(report)
         return report
     
