@@ -9,6 +9,14 @@ from common.security.token_service import TokenService
 from common.services.email_service import EmailService
 from common.services.audit_service import AuditService
 
+from pydantic import ValidationError
+
+# Schemas
+from auth.schemas.register_schema import RegisterSchema
+from auth.schemas.login_schema import LoginSchema
+from auth.schemas.forgot_password_schema import ForgotPasswordSchema
+from auth.schemas.reset_password_schema import ResetPasswordSchema
+
 
 class AuthController:
 
@@ -35,15 +43,18 @@ class AuthController:
     @staticmethod
     def register(db):
 
-        data = request.get_json()
+        try:
+
+            data = RegisterSchema(**request.json)
+
+            data = data.dict()
+
+        except ValidationError as e:
+            return jsonify({
+                "message": str(e)
+            }), 400
 
         auth_service = AuthController.build_service(db)
-
-        required_fields = ["full_name", "email", "username", "password"]
-        
-        for field in required_fields:
-            if not data.get(field):
-                return jsonify({"error": f"{field} is required"}), 400
 
         try:
             user = auth_service.register_user(data)
@@ -74,13 +85,18 @@ class AuthController:
     @staticmethod
     def login(db):
 
-        data = request.get_json()
+        try:
 
-        identifier = data.get("identifier")
-        password = data.get("password")
+            data = LoginSchema(**request.json)
+            data = data.dict()
+            identifier = data.identifier
+            password = data.password
 
-        if not identifier or not password:
-            return jsonify({"message": "identifier and password are required"}), 400
+        except ValidationError as e:
+            return jsonify({
+                "message": str(e)
+            }), 400
+
 
         auth_service = AuthController.build_service(db)
 

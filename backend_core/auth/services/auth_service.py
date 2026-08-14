@@ -65,14 +65,22 @@ class AuthService:
             or self.user_repository.get_by_username(identifier)
         )
 
-        if not user or not verify_password(password, user.password_hash):
+        if not user:
+            self.audit_service.log_failed_authentication(
+                identifier,
+                "User not found"
+            )
+            return ValueError("Invalid credentials")
+
+
+        if not verify_password(password, user.password_hash):
 
             self.audit_service.log_failed_authentication(
                 identifier,
                 "Invalid credentials"
             )
 
-            return None
+            return ValueError("Invalid credentials")
 
         token = self.token_service.generate_token(user)
 
