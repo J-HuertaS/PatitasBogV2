@@ -3,7 +3,7 @@ from flask import request, jsonify, current_app
 from auth.repositories.user_repository import UserRepository
 from auth.repositories.password_reset_token_repository import PasswordResetTokenRepository
 
-from auth.services.auth_service import AuthService
+from auth.services.auth_service import AuthService, UserAlreadyRegistered, InvalidTokenError, UserNotFoundError, InvalidCredentials
 
 from common.security.token_service import TokenService
 from common.services.email_service import EmailService
@@ -65,11 +65,11 @@ class AuthController:
                 "username": user.username
             }), 201
 
-        except ValueError as e:
-
+        except UserAlreadyRegistered as e:
             return jsonify({
                 "message": str(e)
-            }), 400
+                }), 409  # Duplicado
+
 
         except Exception as e:
             import logging
@@ -88,22 +88,37 @@ class AuthController:
         try:
 
             data = LoginSchema(**request.json)
-            data = data.dict()
             identifier = data.identifier
             password = data.password
 
         except ValidationError as e:
             return jsonify({
-                "message": str(e)
+                "error": "Validation failed",
+                "details": e.errors()  # Retorna lista de dicts con detalles
             }), 400
 
 
         auth_service = AuthController.build_service(db)
 
-        result = auth_service.authenticate_user(identifier, password)
+        try:
 
-        if not result:
-            return jsonify({"message": "Invalid credentials"}), 401
+            result = auth_service.authenticate_user(identifier, password)
+
+        except InvalidCredentials as e:
+            return jsonify({
+                "message": str(e)
+            }), 401
+
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+
+            logger.exception("Register error")
+
+            return jsonify({
+                "message": "Internal server error"
+            }), 500
 
         user, token = result
 
@@ -120,16 +135,33 @@ class AuthController:
     @staticmethod
     def forgot_password(db):
 
-        data = request.get_json()
+        try:
 
-        email = data.get("email")
+            data = ForgotPasswordSchema(**request.json)
+            email = data.email
 
-        if not email:
-            return jsonify({"message": "email is required"}), 400
+        except ValidationError as e:
+            return jsonify({
+                "error": "Validation failed",
+                "details": e.errors()  # Retorna lista de dicts con detalles
+            }), 400
 
         auth_service = AuthController.build_service(db)
 
-        auth_service.request_password_reset(email)
+        try:
+
+            auth_service.request_password_reset(email)
+
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+
+            logger.exception("Register error")
+
+            return jsonify({
+                "message": "Internal server error"
+            }), 500
 
         return jsonify({
             "message": "If the email exists, a reset link was sent"
@@ -139,17 +171,41 @@ class AuthController:
     @staticmethod
     def reset_password(db):
 
-        data = request.get_json()
+        try:
+            data = ResetPasswordSchema(**request.json)
+            token = data.token
+            password = data.password
 
-        token = data.get("token")
-        password = data.get("password")
-
-        if not token or not password:
-            return jsonify({"message": "token and password are required"}), 400
+        except ValidationError as e:
+            return jsonify({
+                "error": "Validation failed",
+                "details": e.errors()  # Retorna lista de dicts con detalles
+            }), 400
 
         auth_service = AuthController.build_service(db)
 
-        auth_service.reset_password(token, password)
+        try:
+
+            auth_service.reset_password(token, password)
+
+        except InvalidTokenError as e:
+            return jsonify({
+                "message": str(e)
+            }), 401
+        except UserNotFoundError as e:
+            return jsonify({
+                "message": str(e)
+            }), 401
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+
+            logger.exception("Register error")
+
+            return jsonify({
+                "message": "Internal server error"
+            }), 500
 
         return jsonify({
             "message": "Password updated"

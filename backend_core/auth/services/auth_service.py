@@ -11,6 +11,18 @@ import secrets
 import hashlib
 from datetime import datetime, timedelta
 
+class InvalidTokenError(ValueError):
+    pass
+
+class UserNotFoundError(ValueError):
+    pass
+
+class InvalidCredentials(ValueError):
+    pass
+
+class UserAlreadyRegistered(ValueError):
+    pass
+
 
 class AuthService:
 
@@ -34,11 +46,12 @@ class AuthService:
         existing_user = self.user_repository.get_by_email(user_data["email"])
 
         if existing_user:
-            raise ValueError("Email already registered")
+            raise UserAlreadyRegistered("Email already registered")
 
         existing_user = self.user_repository.get_by_username(user_data["username"])
+
         if existing_user:
-            raise ValueError("Username already taken")
+            raise UserAlreadyRegistered("Username already taken")
 
         user_data["password_hash"] = hash_password(user_data["password"])
         user_data.pop("password", None)
@@ -70,7 +83,7 @@ class AuthService:
                 identifier,
                 "User not found"
             )
-            return ValueError("Invalid credentials")
+            raise InvalidCredentials("Invalid credentials")
 
 
         if not verify_password(password, user.password_hash):
@@ -80,7 +93,7 @@ class AuthService:
                 "Invalid credentials"
             )
 
-            return ValueError("Invalid credentials")
+            raise InvalidCredentials("Invalid credentials")
 
         token = self.token_service.generate_token(user)
 
@@ -139,12 +152,12 @@ class AuthService:
                 reason="Invalid or expired token"
             )
 
-            raise ValueError("Invalid or expired token")
+            raise InvalidTokenError("Invalid or expired token")
 
         user = self.user_repository.get_by_id(reset_token.user_id)
 
         if not user:
-            raise ValueError("User not found")
+            raise UserNotFoundError("Invalid or expired token")
 
         user.password_hash = hash_password(new_password)
 
@@ -158,7 +171,7 @@ class AuthService:
             success=True
         )
 
-        return user
+        return True
 
         
 
