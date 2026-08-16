@@ -1,6 +1,6 @@
 from flask import Blueprint
 from auth.controllers.profile_controller import ProfileController
-from common.security.protected_route import protected_route
+from common.decorators.protected_route import protected_route
 
 
 profile_bp = Blueprint("profile", __name__, url_prefix="/profile")

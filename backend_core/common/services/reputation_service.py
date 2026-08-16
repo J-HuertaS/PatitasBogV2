@@ -1,5 +1,7 @@
 from auth.repositories.user_repository import UserRepository
 
+from common.exceptions import UserNotFound
+
 class ReputationService:
 
     def __init__(self,db):
@@ -14,7 +16,7 @@ class ReputationService:
         user = self.user_repo.get_by_id(user_id)
 
         if not user:
-            raise ValueError("User not found")
+            raise UserNotFound("User not found")
 
         user.points += points
 

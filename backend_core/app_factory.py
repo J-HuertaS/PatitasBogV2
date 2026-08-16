@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 
-from common.security.jwt_service import init_jwt
+from common.decorators.jwt_service import init_jwt
 from config.database import Base, engine
 
 from auth.routes.auth_routes import auth_bp

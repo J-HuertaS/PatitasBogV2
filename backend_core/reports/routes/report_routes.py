@@ -1,7 +1,7 @@
 from flask import Blueprint
 from reports.controllers.report_controller import ReportController
 from config.db_decorator import with_db
-from common.security.protected_route import protected_route
+from common.decorators.protected_route import protected_route
 
 report_routes = Blueprint("reports", __name__)
 

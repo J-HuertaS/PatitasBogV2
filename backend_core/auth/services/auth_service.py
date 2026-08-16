@@ -5,23 +5,15 @@ from auth.repositories.user_repository import UserRepository
 from auth.utils.password import hash_password, verify_password
 from common.services.email_service import EmailService
 from common.services.audit_service import AuditService
-from common.security.token_service import TokenService
+from backend_core.common.services.token_service import TokenService
+
+from common.exceptions import InvalidCredentials, UserAlreadyRegistered, InvalidToken, UserNotFound
 
 import secrets
 import hashlib
 from datetime import datetime, timedelta
 
-class InvalidTokenError(ValueError):
-    pass
 
-class UserNotFoundError(ValueError):
-    pass
-
-class InvalidCredentials(ValueError):
-    pass
-
-class UserAlreadyRegistered(ValueError):
-    pass
 
 
 class AuthService:
@@ -152,12 +144,12 @@ class AuthService:
                 reason="Invalid or expired token"
             )
 
-            raise InvalidTokenError("Invalid or expired token")
+            raise InvalidToken("Invalid or expired token")
 
         user = self.user_repository.get_by_id(reset_token.user_id)
 
         if not user:
-            raise UserNotFoundError("Invalid or expired token")
+            raise UserNotFound("Invalid or expired token")
 
         user.password_hash = hash_password(new_password)
 

@@ -2,7 +2,7 @@ from flask import Blueprint
 
 from reports.controllers.response_controller import ResponseController
 from config.db_decorator import with_db
-from common.security.protected_route import protected_route
+from common.decorators.protected_route import protected_route
 
 
 response_routes = Blueprint("responses", __name__)

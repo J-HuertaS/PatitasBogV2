@@ -2,7 +2,7 @@ from functools import wraps
 from flask import request, g, jsonify
 import jwt
 
-from common.security import jwt_service
+from common.decorators import jwt_service
 from auth.repositories.user_repository import UserRepository
 from config.db_session import get_db
 

@@ -1,7 +1,5 @@
 from flask import request, jsonify, g
 
-
-
 from reports.services.response_service import ResponseService
 
 class ResponseController:

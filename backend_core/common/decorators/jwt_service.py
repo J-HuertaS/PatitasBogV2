@@ -1,4 +1,4 @@
-from common.security.token_service import TokenService
+from backend_core.common.services.token_service import TokenService
 
 token_service = None
 

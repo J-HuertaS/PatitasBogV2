@@ -11,7 +11,7 @@ from reports.repositories.report_repository import ReportRepository
 from common.services.storage_service import StorageService
 
 
-from reports.services.reputation_service import ReputationService
+from backend_core.common.services.reputation_service import ReputationService
 
 
 class ResponseService:

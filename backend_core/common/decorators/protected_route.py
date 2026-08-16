@@ -1,5 +1,5 @@
 from functools import wraps
-from common.security.auth_decorator import auth_required
+from common.decorators.auth_decorator import auth_required
 from config.db_decorator import with_db
 
 

@@ -5,7 +5,7 @@ from auth.repositories.password_reset_token_repository import PasswordResetToken
 
 from auth.services.auth_service import AuthService, UserAlreadyRegistered, InvalidTokenError, UserNotFoundError, InvalidCredentials
 
-from common.security.token_service import TokenService
+from backend_core.common.services.token_service import TokenService
 from common.services.email_service import EmailService
 from common.services.audit_service import AuditService
 
